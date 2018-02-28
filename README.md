@@ -1,5 +1,19 @@
 # solrcloud-zookeeper-kubernetes
-# solrcloud-zookeeper-kubernetes
+================
 
-    kubectl create configmap solr-config --from-literal="solrHome=/store/data" --from-literal="solrPort=30001" --from-literal="zkHost=zookeeper-service:32181" --from-literal="solrHost=solr-service" --from-literal="solrLogsDir=/store/logs"
-    kubectl create configmap zookeeper-config --from-literal="zooMyId=1" --from-literal="zooLogDir=/store/logs" --from-literal="zooDataLogDir=/store/datalog" --from-literal="zooPort=32181" --from-literal="zooDataDir=/store/data"
+This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
+
+## Prerequisite
+
+ * Mac-OS or Linux environment
+ * Docker lastest version - https://docs.docker.com/engine/installation/
+ * Minikube latest version - https://kubernetes.io/docs/getting-started-guides/minikube/
+
+## Quick start
+
+If you want try a lightweight configuration with 1 SolrCloud container and 1 Zookeeper container, just run:
+
+    git clone https://github.com/freedev/solrcloud-zookeeper-kubernetes.git
+    cd solrcloud-zookeeper-kubernetes
+    ./start.sh
+

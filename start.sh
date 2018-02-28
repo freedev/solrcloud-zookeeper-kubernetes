@@ -13,6 +13,8 @@ kubectl create configmap solr-config --from-literal="solrHome=/store/data" --fro
 
 kubectl create configmap zookeeper-config --from-literal="zooMyId=1" --from-literal="zooLogDir=/store/logs" --from-literal="zooDataLogDir=/store/datalog" --from-literal="zooPort=32181" --from-literal="zooDataDir=/store/data"
 
+kubectl get configmap
+
 kubectl create -f pv-zookeeper.yml
 kubectl create -f pv-solr.yml
 
