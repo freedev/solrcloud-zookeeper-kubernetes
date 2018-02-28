@@ -1,6 +1,7 @@
 #!/bin/bash
 
-minikube start --logtostderr --vm-driver=hyperkit
+# minikube start --logtostderr --vm-driver=hyperkit
+
 minikube ssh "sudo chmod 777 /data "
 
 minikube ssh "sudo ip link set docker0 promisc on"
