@@ -3,6 +3,8 @@
 minikube start --logtostderr --vm-driver=hyperkit
 minikube ssh "sudo chmod 777 /data "
 
+minikube ssh "sudo ip link set docker0 promisc on"
+
 scp -r -i $(minikube ssh-key) data/* docker@$(minikube ip):/data/
 
 minikube ssh "sudo chmod -R 777 /data "
