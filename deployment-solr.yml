@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: solr-deployment
+spec:
+  replicas: 1
+  template: 
+    metadata:
+      labels:
+        app: solr
+    spec:
+      volumes:
+      - name: vol
+        persistentVolumeClaim:
+          claimName: task-solr-pv-claim
+      containers: 
+      - name: solr
+        image: solr:latest
+        volumeMounts:
+        - name: vol
+          mountPath: /store
+        ports:
+        - name: solr-port
+          containerPort: 8983
+        env:
+          - name: SOLR_HOME
+            valueFrom: 
+              configMapKeyRef:
+                name: solr-config
+                key: solrHome
+          - name: SOLR_PORT
+            valueFrom: 
+              configMapKeyRef:
+                name: solr-config
+                key: solrPort
+          - name: ZK_HOST
+            valueFrom: 
+              configMapKeyRef:
+                name: solr-config
+                key: zkHost
+          - name: SOLR_HOST
+            valueFrom: 
+              configMapKeyRef:
+                name: solr-config
+                key: solrHost
+          - name: SOLR_LOGS_DIR
+            valueFrom: 
+              configMapKeyRef:
+                name: solr-config
+                key: solrLogsDir
+

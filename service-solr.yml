@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: solr-service
+spec:
+  ports:
+  - port: 30001
+    targetPort: 30001
+    protocol: TCP
+  selector:
+    app: solr
+  type: NodePort
