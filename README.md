@@ -1,5 +1,4 @@
 # solrcloud-zookeeper-kubernetes
-================================
 
 This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
 
