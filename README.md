@@ -9,6 +9,7 @@ This project aims to help developers and newbies that would try latest version o
  * Docker lastest version - https://docs.docker.com/engine/installation/
  * Minikube latest version - https://kubernetes.io/docs/getting-started-guides/minikube/
 
+<!---
 [comment]: <> (## Quick start)
 [comment]: <> ()
 [comment]: <> (If you want try a lightweight configuration with 1 SolrCloud container and 1 Zookeeper container, just run:)
@@ -16,4 +17,5 @@ This project aims to help developers and newbies that would try latest version o
 [comment]: <> (    git clone https://github.com/freedev/solrcloud-zookeeper-kubernetes.git)
 [comment]: <> (    cd solrcloud-zookeeper-kubernetes)
 [comment]: <> (    ./start.sh)
+-->
 
