@@ -56,13 +56,13 @@ spec:
       initContainers:
       - name: init-solr-data
         image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/data && chmod 777 /store/data']
+        command: ['sh', '-c', 'mkdir -p /store/data && chown 8983:8983 /store/data']
         volumeMounts:
         - name: volsolr
           mountPath: /store
       - name: init-solr-logs
         image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/logs && chmod 777 /store/logs']
+        command: ['sh', '-c', 'mkdir -p /store/logs && chown 8983:8983 /store/logs']
         volumeMounts:
         - name: volsolr
           mountPath: /store
