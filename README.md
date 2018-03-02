@@ -3,11 +3,13 @@ solrcloud-zookeeper-kubernetes
 
 This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
 
-## Prerequisite
+## Prerequisite for local installation
 
- * Mac-OS or Linux environment
  * Docker lastest version - https://docs.docker.com/engine/installation/
  * Minikube latest version - https://kubernetes.io/docs/getting-started-guides/minikube/
+
+## Prerequisite for google cloud installation
+
 
 <!---
 ## Quick start

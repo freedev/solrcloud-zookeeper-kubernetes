@@ -13,5 +13,5 @@ spec:
     storage: 5Gi
   gcePersistentDisk: 
     fsType: "ext4" 
-    pdName: "pd-disk-1"
+    pdName: "pd-disk-solr"
 

@@ -1,50 +1,55 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: apps/v1beta2
+kind: StatefulSet
 metadata:
-  name: zookeeper-deployment
+  name: zookeeper-ss
 spec:
-  replicas: 1
-  template: 
+  selector:
+    matchLabels:
+      app: zookeeper-app # has to match .spec.template.metadata.labels
+  serviceName: "zookeeper-service"
+  replicas: 1 # by default is 1
+  template:
     metadata:
       labels:
-        app: zookeeper
+        app: zookeeper-app # has to match .spec.selector.matchLabels
     spec:
+      terminationGracePeriodSeconds: 10
       volumes:
-      - name: vol
+      - name: volzookeeper
         persistentVolumeClaim:
           claimName: task-zookeeper-pv-claim
-      containers: 
+      containers:
       - name: zookeeper
         image: zookeeper:latest
         volumeMounts:
-        - name: vol
+        - name: volzookeeper
           mountPath: /store
         ports:
         - name: zookeeper-port
           containerPort: 2181
         env:
           - name: ZOO_MY_ID
-            valueFrom: 
+            valueFrom:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooMyId
           - name: ZOO_LOG_DIR
-            valueFrom: 
+            valueFrom:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooLogDir
           - name: ZOO_DATA_DIR
-            valueFrom: 
+            valueFrom:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooDataDir
           - name: ZOO_DATA_LOG_DIR
-            valueFrom: 
+            valueFrom:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooDataLogDir
           - name: ZOO_PORT
-            valueFrom: 
+            valueFrom:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooPort
