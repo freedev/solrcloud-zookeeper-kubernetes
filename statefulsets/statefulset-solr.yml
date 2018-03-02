@@ -53,4 +53,17 @@ spec:
               configMapKeyRef:
                 name: solr-config
                 key: solrLogsDir
+      initContainers:
+      - name: init-solr-data
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/data && chmod 777 /store/data']
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+      - name: init-solr-logs
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/logs && chmod 777 /store/logs']
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
 

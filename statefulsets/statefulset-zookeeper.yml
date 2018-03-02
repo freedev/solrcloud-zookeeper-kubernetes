@@ -53,3 +53,22 @@ spec:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooPort
+      initContainers:
+      - name: init-zookeeper-data
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/data && chown 1000:1000 /store/data']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+      - name: init-zookeeper-logs
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/logs && chown 1000:1000 /store/logs']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+      - name: init-zookeeper-datalog
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/datalog && chown 1000:1000 /store/datalog']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
