@@ -66,4 +66,20 @@ spec:
         volumeMounts:
         - name: volsolr
           mountPath: /store
+      - name: init-solr-xml
+        image: busybox
+        command: ['sh', '-c', 'echo ${SOLR_XML} > /store/data/solr.xml']
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+        env:
+          - name: SOLR_XML
+            valueFrom:
+              configMapKeyRef:
+                name: solr-config
+                key: solrXml
+          - name: DEMO_GREETING
+            value: "Hello from the environment"
+          - name: DEMO_FAREWELL
+            value: "Such a sweet sorrow"
 
