@@ -87,8 +87,8 @@ First set default compute/region and compute/zone where create your Kubernetes c
 
 I've choosen `europe-west4` because is near to me, in your case may be better if you a region/zone near you.
 
-Then create the cluster `cluster-solr`
-     
+Then create the Kubernetes cluster `cluster-solr`, note that in this tutorial I've choosen a machine-type `n1-standard-4` with 4 cores and 15 GB RAM.
+
     gcloud container clusters create cluster-solr --num-nodes 1 --machine-type n1-standard-4 --disk-size=50 --scopes storage-rw,compute-rw
     
 Once your Google Cloud Kubernetes cluster is started you need to prepare the environment to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a place (PersistentVolume) where store their data, so we create two 50GB disks:
@@ -114,6 +114,12 @@ If your node is still not reachable, probably it's because of Google cloud defau
     gcloud compute firewall-rules create allow-32080-from-everywhere --allow=TCP:32080 --direction=INGRESS
     gcloud compute firewall-rules create allow-32181-from-everywhere --allow=TCP:32181 --direction=INGRESS
     gcloud compute instances add-tags $(kubectl get node -o json | jq -r '.items[0] | .metadata.name ') --tags=allow-32080-from-everywhere,allow-32181-from-everywhere
+
+### Shutdown
+
+If you want shutdown Solr and Zookeeper just run:
+
+    ./stop.sh
 
 ### Introduction to Stateful application in Kubernetes
 
