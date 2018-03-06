@@ -4,8 +4,9 @@ metadata:
   name: zookeeper-service
 spec:
   ports:
-  - port: 2181
-    targetPort: 2181
+  - port: 32181
+    targetPort: 32181
+    nodePort: 32181
     protocol: TCP
   selector:
     app: zookeeper-app
