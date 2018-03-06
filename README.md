@@ -8,6 +8,11 @@ This project aims to help developers and newbies that would try latest version o
  * install Docker lastest version - https://docs.docker.com/engine/installation/
  * install Minikube latest version - https://kubernetes.io/docs/getting-started-guides/minikube/
 
+### Prerequisite for Google Cloud installation
+
+ * Install Google Cloud SDK - https://cloud.google.com/sdk/downloads
+ * Follow the Kubernetes Engine Quickstart - https://cloud.google.com/kubernetes-engine/docs/quickstart
+
 ### Quick start
 
 If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper container, start with:
@@ -17,14 +22,14 @@ If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper
 
 ### Minikube quick start
 
-The `minikube start` command can be used to start your cluster. 
+Execute `minikube start` to start your cluster. 
 
     minikube start
 
 This command creates and configures a virtual machine that runs a single-node Kubernetes cluster. This command also configures your kubectl installation to communicate with this cluster.
 
-Once minikube is started you need to prepare your virtual machine to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a PersistentVolume where store their data. 
-Then run:
+Once minikube is started you need to prepare the environment to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a place (PersistentVolume) where store their data. 
+Running `prepare-minikube.sh`:
 
     ./prepare-minikube.sh
 
@@ -36,8 +41,8 @@ This will create inside the minikube virtual machine the directories:
     /data/solr/data
     /data/solr/logs
 
-Where Zookeeper and Solr will permanently store their data. 
-After that you can start (create) your SolrCloud cluster with 1 Solr instance and 1 Zookeeper instance:
+Zookeeper and Solr will permanently read and write their data there.
+After that you can finally start (create) your SolrCloud cluster with 1 Solr instance and 1 Zookeeper instance:
 
     ./start-minikube.sh
 
@@ -62,20 +67,8 @@ Then run the command `minikube service` to see where the services are (which por
     | kube-system | kubernetes-dashboard | http://192.168.64.5:30000 |
     |-------------|----------------------|---------------------------|
 
-This is an example of the returned output, the ip address and the port for `solr-service` and `zookeeper-service`.
+As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zookeeper-service`.
 So you'll find the SorlCloud cluster at: http://192.168.64.5:32080
-
-### Prerequisite for Google Cloud installation
-
-<!---
-## Quick start
-
-
-    git clone https://github.com/freedev/solrcloud-zookeeper-kubernetes.git
-    cd solrcloud-zookeeper-kubernetes
-    ./start.sh
--->
-
 
 ### Introduction to Stateful application in Kubernetes
 
