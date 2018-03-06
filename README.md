@@ -22,11 +22,11 @@ If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper
 
 ### Minikube quick start
 
-Execute `minikube start` to start your cluster. 
+Execute `minikube start` to create and configure a virtual machine that runs a single-node Kubernetes cluster. 
 
     minikube start
 
-This command creates and configures a virtual machine that runs a single-node Kubernetes cluster. This command also configures your kubectl installation to communicate with this cluster.
+This command also configures your kubectl installation to communicate with this cluster.
 
 Once minikube is started you need to prepare the environment to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a place (PersistentVolume) where store their data. 
 Running `prepare-minikube.sh`:
@@ -69,6 +69,28 @@ Then run the command `minikube service` to see where the services are (which por
 
 As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zookeeper-service`.
 So you'll find the SorlCloud cluster at: http://192.168.64.5:32080
+
+### Google Cloud quick start
+
+First set default compute/region and compute/zone where create your Kubernetes cluster, for example:
+
+    gcloud config set compute/region europe-west4
+     
+    gcloud config set compute/zone europe-west4-b
+
+I've choosen `europe-west4` because is near to me, in your case may be better if you a region/zone near you.
+
+Then create the cluster `cluster-solr`
+     
+    gcloud container clusters create cluster-solr --num-nodes 1 --machine-type n1-standard-4 --disk-size=50 --scopes storage-rw,compute-rw
+    
+Once your Google Cloud Kubernetes cluster is started you need to prepare the environment to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a place (PersistentVolume) where store their data, so we create two 50GB disks:
+    
+    gcloud compute disks create --size 50 --type pd-standard  pd-disk-zookeeper
+    
+    gcloud compute disks create --size 50 --type pd-standard  pd-disk-solr
+
+
 
 ### Introduction to Stateful application in Kubernetes
 
