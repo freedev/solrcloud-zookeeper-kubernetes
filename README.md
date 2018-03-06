@@ -70,6 +70,13 @@ Then run the command `minikube service` to see where the services are (which por
 As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zookeeper-service`.
 So you'll find the SorlCloud cluster at: http://192.168.64.5:32080
 
+On the other hand you could use `kubectl` and `jq`:
+
+    $ kubectl get svc solr-service -o json | jq ".spec.ports[0] | .nodePort"
+    32080
+    $ kubectl get nodes -o json | jq '.items[0] | .status.addresses[] | select(.type | contains("ExternalIP")) | .address'
+    192.168.64.5
+
 ### Google Cloud quick start
 
 First set default compute/region and compute/zone where create your Kubernetes cluster, for example:
@@ -90,7 +97,23 @@ Once your Google Cloud Kubernetes cluster is started you need to prepare the env
     
     gcloud compute disks create --size 50 --type pd-standard  pd-disk-solr
 
+Now you can start your cluster:
 
+    start-google-cloud.sh
+
+When your cluster is successfully started, you need to understand how to reach the Solr instance. 
+You can use `kubectl` and `jq`:
+
+    $ kubectl get svc solr-service -o json | jq ".spec.ports[0] | .nodePort"
+    32080
+    $ kubectl get nodes -o json | jq '.items[0] | .status.addresses[] | select(.type | contains("ExternalIP")) | .address'
+    123.123.123.123
+
+But your node is still not reachable because of Google cloud default network firewall rules.
+
+    gcloud compute firewall-rules create allow-32080-from-everywhere --allow=TCP:32080 --direction=INGRESS
+    gcloud compute firewall-rules create allow-32181-from-everywhere --allow=TCP:32181 --direction=INGRESS
+    gcloud compute instances add-tags $(kubectl get node -o json | jq -r '.items[0] | .metadata.name ') --tags=allow-32080-from-everywhere,allow-32181-from-everywhere
 
 ### Introduction to Stateful application in Kubernetes
 
