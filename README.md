@@ -1,9 +1,9 @@
-solrcloud-zookeeper-kubernetes
+SolrCloud Zookeeper Kubernetes
 ==============================
 
 This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
 
-## Introduction to Stateful application in Kubernetes
+### Introduction to Stateful application in Kubernetes
 
 Before to deploy Solr or Zookeeper in Kubernetes, it is important understand what's the difference between Stateless 
 and Stateful applications in Kubernetes.
@@ -32,13 +32,12 @@ And we have to create the environment following these steps:
 3. map solr and zookeeper as network services 
 
 
-## Prerequisite for local installation
+### Prerequisite for Minikube installation
 
  * Docker lastest version - https://docs.docker.com/engine/installation/
  * Minikube latest version - https://kubernetes.io/docs/getting-started-guides/minikube/
 
-## Prerequisite for google cloud installation
-
+### Prerequisite for Google Cloud installation
 
 <!---
 ## Quick start

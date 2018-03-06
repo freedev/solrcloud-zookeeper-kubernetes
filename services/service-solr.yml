@@ -8,5 +8,5 @@ spec:
     targetPort: 8983
     protocol: TCP
   selector:
-    app: solr
+    app: solr-app
   type: NodePort
