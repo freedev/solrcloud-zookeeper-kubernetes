@@ -109,7 +109,7 @@ You can use `kubectl` and `jq`:
     $ kubectl get nodes -o json | jq '.items[0] | .status.addresses[] | select(.type | contains("ExternalIP")) | .address'
     123.123.123.123
 
-But your node is still not reachable because of Google cloud default network firewall rules.
+If your node is still not reachable, probably it's because of Google cloud default network firewall rules.
 
     gcloud compute firewall-rules create allow-32080-from-everywhere --allow=TCP:32080 --direction=INGRESS
     gcloud compute firewall-rules create allow-32181-from-everywhere --allow=TCP:32181 --direction=INGRESS
