@@ -1,12 +1,26 @@
 SolrCloud Zookeeper Kubernetes
 ==============================
 
-This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
+This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a 
+Kubernetes environment.
+
+Now are currently described following Kubernetes Deployment Models:
+
+* Minikube
+* Kubernetes with Docker for Desktop (edge version)
+* Google Container Engine (GKE)
 
 ### Prerequisite for Minikube installation
 
- * install Docker lastest version - https://docs.docker.com/engine/installation/
- * install Minikube latest version - https://kubernetes.io/docs/getting-started-guides/minikube/
+ * [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop - 
+ * [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version - also note that this also means 
+ install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment 
+ (MacOS, Linux, Windows).
+
+### Prerequisite for Kubernetes with Docker for Desktop
+
+ * [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition. 
+ *Pay attention that at time of writing only **Edge channel** has Kubernetes embedded*.
 
 ### Prerequisite for Google Cloud installation
 
@@ -76,6 +90,26 @@ On the other hand you could use `kubectl` and `jq`:
     32080
     $ kubectl get nodes -o json | jq '.items[0] | .status.addresses[] | select(.type | contains("ExternalIP")) | .address'
     192.168.64.5
+
+### Kubernetes with Docker for Desktop quick start
+
+    ./start-docker-for-desktop.sh
+
+Then run the command `kubectl get pods` and `kubectl get service` to ensure that pods and services were created 
+correctly: 
+
+    $ kubectl get pods
+    NAME             READY     STATUS    RESTARTS   AGE
+    solr-ss-0        1/1       Running   0          12m
+    zookeeper-ss-0   1/1       Running   0          12m
+
+    $ kubectl get service
+    NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+    kubernetes          ClusterIP   10.96.0.1       <none>        443/TCP           12d
+    solr-service        NodePort    10.98.55.176    <none>        32080:32080/TCP   32m
+    zookeeper-service   NodePort    10.104.43.251   <none>        32181:32181/TCP   32m
+
+So you'll find the SorlCloud cluster at: http://localhost:32080/solr/#/
 
 ### Google Cloud quick start
 
