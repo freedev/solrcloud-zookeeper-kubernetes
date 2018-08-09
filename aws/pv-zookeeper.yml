@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-volume
+  annotations:
+    pv.beta.kubernetes.io/gid: "1000"
+    pv.beta.kubernetes.io/uid: "1000"
+  labels:
+    type: amazonEBS
+spec:
+  storageClassName: gp2
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  awsElasticBlockStore: 
+    fsType: ext4
+    volumeID: vol-01abad9c1fbd86143

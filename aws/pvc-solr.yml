@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: task-solr-pv-claim
+  annotations:
+    pv.beta.kubernetes.io/gid: "1000"
+    pv.beta.kubernetes.io/uid: "1000"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: gp2
