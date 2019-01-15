@@ -1,5 +1,7 @@
 #!/bin/bash
 
+kubectl apply -f https://k8s.io/examples/application/zookeeper/zookeeper.yaml
+
 kubectl create configmap solr-config --from-env-file=configmap/solr-config.properties 
 
 kubectl get configmap
