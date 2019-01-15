@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: solr-ss
@@ -6,18 +6,25 @@ spec:
   selector:
     matchLabels:
       app: solr-app # has to match .spec.template.metadata.labels
-  serviceName: "solr-service"
-  replicas: 1 # by default is 1
+  serviceName: "solr-service-hs"
+  replicas: 3 
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: solr-app # has to match .spec.selector.matchLabels
     spec:
-      terminationGracePeriodSeconds: 10
-      volumes:
-      - name: volsolr
-        persistentVolumeClaim:
-          claimName: task-solr-pv-claim
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - solr-app
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - name: solr
         image: solr:latest
@@ -43,11 +50,12 @@ spec:
               configMapKeyRef:
                 name: solr-config
                 key: zkHost
-          - name: SOLR_HOST
+          - name: POD_HOST_NAME
             valueFrom:
-              configMapKeyRef:
-                name: solr-config
-                key: solrHost
+              fieldRef:
+                fieldPath: metadata.name
+          - name: SOLR_HOST
+            value: "$(POD_HOST_NAME).solr-service-hs.default.svc.cluster.local"
           - name: SOLR_LOGS_DIR
             valueFrom:
               configMapKeyRef:
@@ -72,4 +80,11 @@ spec:
         volumeMounts:
         - name: volsolr
           mountPath: /store
-
+  volumeClaimTemplates:
+    - metadata:
+        name: volsolr
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
