@@ -10,7 +10,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /solr
+      - path: /
         backend:
           serviceName: solr-service
           servicePort: 32080
