@@ -62,6 +62,12 @@ spec:
               configMapKeyRef:
                 name: solr-config
                 key: solrLogsDir
+        livenessProbe:
+          httpGet:
+            path: /solr/#/
+            port: 32080
+          initialDelaySeconds: 10
+          periodSeconds: 3
       initContainers:
       - name: init-solr-data
         image: busybox
