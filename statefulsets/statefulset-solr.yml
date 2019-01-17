@@ -34,7 +34,7 @@ spec:
           mountPath: /store
         ports:
         - name: solr-port
-          containerPort: 2181
+          containerPort: 32080
         env:
           - name: SOLR_HOME
             valueFrom:
