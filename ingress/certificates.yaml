@@ -5,13 +5,13 @@ metadata:
 spec:
   secretName: tls-secret-prod
   dnsNames:
-  - solr-aks-ingress.northeurope.cloudapp.azure.com
+  - nobby-a4aedadfe4.northeurope.cloudapp.azure.com
   acme:
     config:
     - http01:
         ingressClass: nginx
       domains:
-      - solr-aks-ingress.northeurope.cloudapp.azure.com
+      - nobby-a4aedadfe4.northeurope.cloudapp.azure.com
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

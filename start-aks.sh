@@ -23,17 +23,16 @@ helm install stable/nginx-ingress --namespace kube-system --set controller.repli
 # get eternal ip of ingress controller
 kubectl get service -l app=nginx-ingress --namespace kube-system
 
-# create dns for ingress (solr-aks-ingress - created later)
+# create dns for ip address created by ingress controller 
 
 ##!/bin/bash
 ## Public IP address of your ingress controller
-#IP="40.115.96.127"
-## Name to associate with public IP address
-#DNSNAME="solr-aks-ingress"
+#IP="138.91.55.80"
 ## Get the resource-id of the public ip
 #PUBLICIPID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$IP')].[id]" --output tsv)
 ## Update public ip address with DNS name
-#az network public-ip update --ids $PUBLICIPID --dns-name $DNSNAME
+#az network public-ip update --ids $PUBLICIPID --dns-name "nobby-a4aedadfe4"
+
 
 # create cert-manager 
 # This is a 2-step process as a work-around for some issues with CRDs
@@ -54,10 +53,11 @@ kubectl apply -f ingress/cluster-issuer.yaml
 # create cert 
 kubectl apply -f ingress/certificates.yaml
 
-# create ingress
+# create ingress - it takes a few minutes for the certificate to be visible on the https site
 kubectl apply -f ingress/ingress.yml
 
 kubectl get pod
-kubectl get deployment
+kubectl get statefulset
 kubectl get service
-kubectl get service -l app=nginx-ingress --namespace kube-system    # ingress IP
+kubectl get certificate
+kubectl get ingress

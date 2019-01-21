@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: solr-ingress
+  name: nobby-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
@@ -9,13 +9,17 @@ metadata:
 spec:
   tls:
   - hosts:
-    - solr-aks-ingress.northeurope.cloudapp.azure.com
+    - nobby-a4aedadfe4.northeurope.cloudapp.azure.com
     secretName: tls-secret-prod
   rules:
-  - host: solr-aks-ingress.northeurope.cloudapp.azure.com
+  - host: nobby-a4aedadfe4.northeurope.cloudapp.azure.com
     http:
       paths:
       - path: /
+        backend:
+          serviceName: nobby-service
+          servicePort: 3000
+      - path: /solr
         backend:
           serviceName: solr-service
           servicePort: 32080
