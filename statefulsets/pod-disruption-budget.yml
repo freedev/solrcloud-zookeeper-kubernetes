@@ -1,0 +1,9 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: solr-pdb
+spec:
+  selector:
+    matchLabels:
+      app: solr-app
+  maxUnavailable: 1

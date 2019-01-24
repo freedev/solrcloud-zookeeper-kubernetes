@@ -9,6 +9,7 @@ kubectl get configmap
 
 # I think the headless service needs creating before the stateful set
 kubectl create -f services/service-solr.yml
+kubectl create -f statefulsets/pod-disruption-budget.yml
 kubectl create -f statefulsets/statefulset-solr.yml
 
 # init helm
