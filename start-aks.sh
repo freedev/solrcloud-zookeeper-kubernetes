@@ -3,7 +3,7 @@
 # build zookeeper ensenble from k8s repo
 kubectl apply -f https://k8s.io/examples/application/zookeeper/zookeeper.yaml
 
-kubectl create configmap solr-config --from-env-file=configmap/solr-config.properties 
+kubectl create configmap solr-config --from-env-file=configmap/solr-config-multi.properties 
 
 kubectl get configmap
 
