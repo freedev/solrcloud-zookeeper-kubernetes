@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: solr-service
+  name: solr-service-hs
+  labels:
+    app: solr-app
 spec:
   ports:
   - port: 32080
-    targetPort: 32080
-    nodePort: 32080
-    protocol: TCP
+  clusterIP: None
   selector:
     app: solr-app
-  type: NodePort

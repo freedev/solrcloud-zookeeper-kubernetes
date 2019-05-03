@@ -7,7 +7,7 @@ spec:
     matchLabels:
       app: solr-app # has to match .spec.template.metadata.labels
   serviceName: "solr-service-hs"
-  replicas: 3 
+  replicas: 1 
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: Parallel

@@ -15,9 +15,15 @@ kubectl get pv
 kubectl get pvc
 
 kubectl create -f statefulsets/statefulset-zookeeper.yml
+
+sleep 5
+
 kubectl create -f services/service-zookeeper.yml
 
 kubectl create -f statefulsets/statefulset-solr.yml
+
+sleep 5
+
 kubectl create -f services/service-solr.yml
 
 kubectl get pod
