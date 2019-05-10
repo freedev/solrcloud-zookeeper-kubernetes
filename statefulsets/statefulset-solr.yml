@@ -69,7 +69,7 @@ spec:
                 key: solrLogsDir
         livenessProbe:
           httpGet:
-            path: /solr/#/
+            path: /solr/
             port: 32080
           initialDelaySeconds: 10
           periodSeconds: 3
@@ -92,11 +92,3 @@ spec:
         volumeMounts:
         - name: volsolr
           mountPath: /store
-  volumeClaimTemplates:
-    - metadata:
-        name: volsolr
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 10Gi
