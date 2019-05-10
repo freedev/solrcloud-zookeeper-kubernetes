@@ -9,6 +9,7 @@ Now are currently described following Kubernetes Deployment Models:
 * Minikube
 * Kubernetes with Docker for Desktop (edge version)
 * Google Container Engine (GKE)
+* Azure Kubernetes Services (AKS)
 
 ### Prerequisite for Minikube installation
 
@@ -26,6 +27,11 @@ Now are currently described following Kubernetes Deployment Models:
 
  * Install Google Cloud SDK - https://cloud.google.com/sdk/downloads
  * Follow the Kubernetes Engine Quickstart - https://cloud.google.com/kubernetes-engine/docs/quickstart
+
+### Prerequisite for Azure AKS installation
+
+* Install [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+* Then run: `az aks install-cli`
 
 ### Quick start
 
@@ -148,6 +154,14 @@ If your node is still not reachable, probably it's because of Google cloud defau
     gcloud compute firewall-rules create allow-32080-from-everywhere --allow=TCP:32080 --direction=INGRESS
     gcloud compute firewall-rules create allow-32181-from-everywhere --allow=TCP:32181 --direction=INGRESS
     gcloud compute instances add-tags $(kubectl get node -o json | jq -r '.items[0] | .metadata.name ') --tags=allow-32080-from-everywhere,allow-32181-from-everywhere
+
+## Azure AKS quickstart
+
+* You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/) 
+
+Now you can start your cluster:
+
+    start-aks.sh
 
 ### Shutdown
 
