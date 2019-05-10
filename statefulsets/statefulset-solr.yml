@@ -16,6 +16,11 @@ spec:
       labels:
         app: solr-app # has to match .spec.selector.matchLabels
     spec:
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: volsolr
+        persistentVolumeClaim:
+          claimName: task-solr-pv-claim
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
