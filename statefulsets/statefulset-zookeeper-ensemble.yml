@@ -21,7 +21,10 @@ spec:
         command: 
         - "/bin/sh"
         - "-c"
-        - "$(echo $((${HOSTNAME##*-}+1)) > /store/data/myid ) && \
+        - "if [ ! -d $ZOO_DATA_DIR ] ; then mkdir -p $ZOO_DATA_DIR ; chmod 777 $ZOO_DATA_DIR ; else touch /conf/test; fi && \
+           if [ ! -d $ZOO_LOG_DIR ] ; then mkdir -p $ZOO_LOG_DIR ; chmod 777 $ZOO_LOG_DIR ; else touch /conf/test; fi && \
+           if [ ! -d $ZOO_DATA_LOG_DIR ] ; then mkdir -p $ZOO_DATA_LOG_DIR ; chmod 777 $ZOO_DATA_LOG_DIR ; else touch /conf/test; fi && \
+           $(echo $((${HOSTNAME##*-}+1)) > /store/data/myid ) && \
            $(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && \
            export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && \
            /docker-entrypoint.sh zkServer.sh start-foreground"
@@ -61,25 +64,6 @@ spec:
               configMapKeyRef:
                 name: zookeeper-ensemble-config
                 key: zooServers
-      initContainers:
-      - name: init-zookeeper-data
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/data && chmod 777 /store/data']
-        volumeMounts:
-        - name: volzookeeper
-          mountPath: /store
-      - name: init-zookeeper-logs
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/logs && chmod 777 /store/logs']
-        volumeMounts:
-        - name: volzookeeper
-          mountPath: /store
-      - name: init-zookeeper-datalog
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/datalog && chmod 777 /store/datalog']
-        volumeMounts:
-        - name: volzookeeper
-          mountPath: /store
   volumeClaimTemplates:
   - metadata:
       name: volzookeeper
