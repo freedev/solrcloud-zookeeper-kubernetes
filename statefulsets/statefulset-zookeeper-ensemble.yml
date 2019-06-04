@@ -21,7 +21,8 @@ spec:
         command: 
         - "/bin/sh"
         - "-c"
-        - "$(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && \
+        - "$(echo $((${HOSTNAME##*-}+1)) > /store/data/myid ) && \
+           $(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && \
            export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && \
            /docker-entrypoint.sh zkServer.sh start-foreground"
         volumeMounts:
@@ -76,12 +77,6 @@ spec:
       - name: init-zookeeper-datalog
         image: busybox
         command: ['sh', '-c', 'mkdir -p /store/datalog && chmod 777 /store/datalog']
-        volumeMounts:
-        - name: volzookeeper
-          mountPath: /store
-      - name: init-zookeeper-id
-        image: busybox
-        command: ['sh', '-c', 'export ZOO_MY_ID=$((${HOSTNAME##*-}+1)) ; echo $ZOO_MY_ID > /store/data/myid']
         volumeMounts:
         - name: volzookeeper
           mountPath: /store
