@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zookeeper-debug
+  namespace: default
+spec:
+  containers:
+  - name: zookeeper-debug
+    image: lrcvacrdv.azurecr.io/zookeeper-local:3.4.14
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+  hostNetwork: false
+  dnsPolicy: ClusterFirstWithHostNet

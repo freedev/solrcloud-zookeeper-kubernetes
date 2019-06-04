@@ -1,0 +1,95 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: zk
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper-app # has to match .spec.template.metadata.labels
+  serviceName: "zookeeper"
+  replicas: 3 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper-app # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: zookeeper
+        image: lrcvacrdv.azurecr.io/zookeeper-local:3.4.14
+        imagePullPolicy: Always
+#        command: ["ZOO_SERVERS=\"$(cat /conf/rewrite-servers.txt)\" /bin/sh", "-c", "/docker-entrypoint.sh zkServer.sh start-foreground"]
+#        lifecycle:
+#          postStart:
+#            exec:
+#              command: ["/bin/sh", "-c", "echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/rewrite-servers.txt" ]
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+        ports:
+        - name: zkport
+          containerPort: 2181
+        - name: zkportpeers
+          containerPort: 2888
+        - name: zkportlection
+          containerPort: 3888
+        env:
+          - name: ZOO_LOG_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooLogDir
+          - name: ZOO_DATA_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooDataDir
+          - name: ZOO_DATA_LOG_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooDataLogDir
+          - name: ZOO_STANDALONE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooStandaloneEnabled
+          - name: ZOO_SERVERS
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooServers
+      initContainers:
+      - name: init-zookeeper-data
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/data && chmod 777 /store/data']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+      - name: init-zookeeper-logs
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/logs && chmod 777 /store/logs']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+      - name: init-zookeeper-datalog
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/datalog && chmod 777 /store/datalog']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+      - name: init-zookeeper-id
+        image: busybox
+        command: ['sh', '-c', 'export ZOO_MY_ID=$((${HOSTNAME##*-}+1)) ; echo $ZOO_MY_ID > /store/data/myid']
+        volumeMounts:
+        - name: volzookeeper
+          mountPath: /store
+  volumeClaimTemplates:
+  - metadata:
+      name: volzookeeper
+    spec:
+      storageClassName: azurefile-ensemble
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
