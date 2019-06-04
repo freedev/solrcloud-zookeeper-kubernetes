@@ -21,7 +21,9 @@ spec:
         command: 
         - "/bin/sh"
         - "-c"
-        - "$(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && /docker-entrypoint.sh zkServer.sh start-foreground"
+        - "$(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && \
+           export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && \
+           /docker-entrypoint.sh zkServer.sh start-foreground"
         volumeMounts:
         - name: volzookeeper
           mountPath: /store
