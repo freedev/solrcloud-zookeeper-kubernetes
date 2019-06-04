@@ -16,13 +16,12 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: zookeeper
-        image: lrcvacrdv.azurecr.io/zookeeper-local:3.4.14
+        image: zookeeper:3.4.14
         imagePullPolicy: Always
-#        command: ["ZOO_SERVERS=\"$(cat /conf/rewrite-servers.txt)\" /bin/sh", "-c", "/docker-entrypoint.sh zkServer.sh start-foreground"]
-#        lifecycle:
-#          postStart:
-#            exec:
-#              command: ["/bin/sh", "-c", "echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/rewrite-servers.txt" ]
+        command: 
+        - "/bin/sh"
+        - "-c"
+        - "$(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && /docker-entrypoint.sh zkServer.sh start-foreground"
         volumeMounts:
         - name: volzookeeper
           mountPath: /store
@@ -31,7 +30,7 @@ spec:
           containerPort: 2181
         - name: zkportpeers
           containerPort: 2888
-        - name: zkportlection
+        - name: zkportelection
           containerPort: 3888
         env:
           - name: ZOO_LOG_DIR
