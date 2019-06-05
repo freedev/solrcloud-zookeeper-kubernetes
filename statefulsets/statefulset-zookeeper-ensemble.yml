@@ -24,7 +24,7 @@ spec:
         - "if [ ! -d $ZOO_DATA_DIR ] ; then mkdir -p $ZOO_DATA_DIR ; chmod 777 $ZOO_DATA_DIR ; else touch /conf/test; fi && \
            if [ ! -d $ZOO_LOG_DIR ] ; then mkdir -p $ZOO_LOG_DIR ; chmod 777 $ZOO_LOG_DIR ; else touch /conf/test; fi && \
            if [ ! -d $ZOO_DATA_LOG_DIR ] ; then mkdir -p $ZOO_DATA_LOG_DIR ; chmod 777 $ZOO_DATA_LOG_DIR ; else touch /conf/test; fi && \
-           $(echo $((${HOSTNAME##*-}+1)) > /store/data/myid ) && \
+           if [ ! -f $ZOO_DATA_DIR/myid ] ; then $(echo $((${HOSTNAME##*-}+1)) > $ZOO_DATA_DIR/myid ) else touch /conf/test; fi && \
            $(echo $ZOO_SERVERS | sed \"s/$(hostname).zookeeper/0.0.0.0/g\" > /conf/zooservers.txt) && \
            export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && \
            /docker-entrypoint.sh zkServer.sh start-foreground"
