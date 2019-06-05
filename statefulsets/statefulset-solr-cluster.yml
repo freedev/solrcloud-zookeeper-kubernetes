@@ -48,20 +48,35 @@ spec:
                 key: solrLogsDir
       initContainers:
       - name: init-solr-data
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/data && chown 8983:8983 /store/data']
-        volumeMounts:
-        - name: volsolr
-          mountPath: /store
-      - name: init-solr-logs
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/logs && chown 8983:8983 /store/logs']
-        volumeMounts:
-        - name: volsolr
-          mountPath: /store
-      - name: init-solr-xml
-        image: solr:latest
-        command: ['sh', '-c', '[ ! -f /store/data/solr.xml ] && cp /opt/solr/server/solr/solr.xml /store/data/solr.xml || true']
+        image: solr:8.1.1
+        command: 
+        - "/bin/sh"
+        - "-c"
+        - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR ; chmod 777 $SOLR_LOGS_DIR ; else true; fi && \
+           if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME ; chmod 777 $SOLR_HOME ; else true; fi && \
+           if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml /store/data/solr.xml; else true; fi "
+        env:
+          - name: SOLR_HOME
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: solrHome
+          - name: ZK_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: zkHost
+          - name: POD_HOST_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: SOLR_HOST
+            value: "$(POD_HOST_NAME).solrcluster"
+          - name: SOLR_LOGS_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: solrLogsDir
         volumeMounts:
         - name: volsolr
           mountPath: /store
