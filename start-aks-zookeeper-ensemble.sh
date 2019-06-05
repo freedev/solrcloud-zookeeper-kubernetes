@@ -4,14 +4,14 @@ kubectl create configmap zookeeper-ensemble-config --from-env-file=configmap/zoo
 
 kubectl get configmap
 
-kubectl create -f aks/storageclass-azurefile-ensemble.yml
+kubectl apply -f aks/storageclass-zkensemble.yml
 
 kubectl get storageclass
 
-kubectl create -f services/service-zookeeper-ensemble.yml
+kubectl apply -f services/service-zookeeper-ensemble.yml
 
 kubectl get service
 
-kubectl create -f statefulsets/statefulset-zookeeper-ensemble.yml
+kubectl apply -f statefulsets/statefulset-zookeeper-ensemble.yml
 
 kubectl get statefulsets

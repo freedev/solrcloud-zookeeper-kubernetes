@@ -4,7 +4,7 @@ set -e
 
 if [ "$ZOO_SERVERS" != "" ]
 then
-  echo $ZOO_SERVERS | sed "s/$(hostname).zk-ensemble/0.0.0.0/g" > /conf/zooservers.txt
+  echo $ZOO_SERVERS | sed "s/$(hostname).zkensemble/0.0.0.0/g" > /conf/zooservers.txt
   cat /conf/zooservers.txt
   export ZOO_SERVERS="$( cat /conf/zooservers.txt )"
 fi
