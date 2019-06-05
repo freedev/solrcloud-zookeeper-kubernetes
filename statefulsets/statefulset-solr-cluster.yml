@@ -69,7 +69,7 @@ spec:
   - metadata:
       name: volsolr
     spec:
-      storageClassName: azurefile-ensemble
+      storageClassName: store-solrcluster
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:

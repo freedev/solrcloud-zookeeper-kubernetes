@@ -4,7 +4,7 @@ kubectl create configmap solr-cluster-config --from-env-file=configmap/solr-clus
 
 kubectl get configmap
 
-kubectl apply -f aks/storageclass-azurefile-ensemble.yml
+kubectl apply -f aks/storageclass-solrcluster.yml
 
 kubectl get storageclass
 
