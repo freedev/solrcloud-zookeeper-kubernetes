@@ -7,8 +7,8 @@ allowVolumeExpansion: true
 mountOptions:
   - dir_mode=0777
   - file_mode=0777
-  - uid=1000
-  - gid=1000
+  - uid=999
+  - gid=999
 parameters:
   skuName: Standard_LRS
 #  location: eastus

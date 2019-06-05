@@ -18,7 +18,7 @@ metadata:
 spec:
   ports:
   - protocol: TCP
-    port: 80
+    port: 8983
     targetPort: 8983
   type: LoadBalancer
   selector:

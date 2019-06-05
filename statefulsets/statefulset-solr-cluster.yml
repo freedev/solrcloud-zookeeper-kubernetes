@@ -52,26 +52,16 @@ spec:
         command: 
         - "/bin/sh"
         - "-c"
-        - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR ; chmod 777 $SOLR_LOGS_DIR ; else true; fi && \
-           if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME ; chmod 777 $SOLR_HOME ; else true; fi && \
-           if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml /store/data/solr.xml; else true; fi "
+        - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR ; else true; fi && \
+           if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME/lib ; else true; fi && \
+           if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml;\
+               sed -i \"s/<solr>/<solr><str name='sharedLib'>lib<\\/str>/g\" $SOLR_HOME/solr.xml ; else true; fi "
         env:
           - name: SOLR_HOME
             valueFrom:
               configMapKeyRef:
                 name: solr-cluster-config
                 key: solrHome
-          - name: ZK_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: solr-cluster-config
-                key: zkHost
-          - name: POD_HOST_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
-          - name: SOLR_HOST
-            value: "$(POD_HOST_NAME).solrcluster"
           - name: SOLR_LOGS_DIR
             valueFrom:
               configMapKeyRef:
