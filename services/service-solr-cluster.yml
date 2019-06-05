@@ -1,25 +1,25 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zk-ensemble
+  name: solrcluster
   labels:
-    app: zookeeper-app
+    app: solr-app
 spec:
   clusterIP: None
   selector:
-    app: zookeeper-app
+    app: solr-app
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: zk-service
+  name: solr-service
   labels:
-    app: zookeeper-app
+    app: solr-app
 spec:
   ports:
   - protocol: TCP
-    port: 2181
-    targetPort: 2181
+    port: 80
+    targetPort: 8983
   type: LoadBalancer
   selector:
-    app: zookeeper-app
+    app: solr-app

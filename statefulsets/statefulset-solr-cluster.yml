@@ -1,0 +1,76 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: solr
+spec:
+  selector:
+    matchLabels:
+      app: solr-app # has to match .spec.template.metadata.labels
+  serviceName: "solrcluster"
+  replicas: 2 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: solr-app # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: solr
+        image: solr:8.1.1
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+        ports:
+        - name: solrport
+          containerPort: 8983
+        env:
+          - name: SOLR_HOME
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: solrHome
+          - name: ZK_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: zkHost
+          - name: POD_HOST_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: SOLR_HOST
+            value: "$(POD_HOST_NAME).solrcluster"
+          - name: SOLR_LOGS_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: solrLogsDir
+      initContainers:
+      - name: init-solr-data
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/data && chown 8983:8983 /store/data']
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+      - name: init-solr-logs
+        image: busybox
+        command: ['sh', '-c', 'mkdir -p /store/logs && chown 8983:8983 /store/logs']
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+      - name: init-solr-xml
+        image: solr:latest
+        command: ['sh', '-c', '[ ! -f /store/data/solr.xml ] && cp /opt/solr/server/solr/solr.xml /store/data/solr.xml || true']
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+  volumeClaimTemplates:
+  - metadata:
+      name: volsolr
+    spec:
+      storageClassName: azurefile-ensemble
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
