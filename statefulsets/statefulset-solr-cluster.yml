@@ -55,7 +55,7 @@ spec:
         - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR ; else true; fi && \
            if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME/lib ; else true; fi && \
            if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml;\
-               sed -i \"s/<solr>/<solr><str name='sharedLib'>$SOLR_HOME\\/lib<\\/str>/g\" $SOLR_HOME/solr.xml ; else true; fi "
+               sed -i \"s/<solr>/<solr><str name='sharedLib'>\\/store\\/data\\/lib<\\/str>/g\" $SOLR_HOME/solr.xml ; else true; fi "
         env:
           - name: SOLR_HOME
             valueFrom:
