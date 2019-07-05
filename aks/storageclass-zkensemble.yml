@@ -2,7 +2,8 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: store-zkensemble
-provisioner: kubernetes.io/azure-file
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Retain
 allowVolumeExpansion: true
 mountOptions:
   - dir_mode=0777
@@ -10,6 +11,6 @@ mountOptions:
   - uid=999
   - gid=999
 parameters:
-  skuName: Standard_LRS
+  skuName: Premium_LRS
 #  location: eastus
 #  storageAccount: azure_storage_account_name
