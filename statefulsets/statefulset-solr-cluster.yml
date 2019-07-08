@@ -48,13 +48,41 @@ spec:
                 key: solrLogsDir
       initContainers:
       - name: init-solr-data
+        image: busybox
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME && chown 8983:8983 $SOLR_HOME ; else true; fi"
+        env:
+          - name: SOLR_HOME
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: solrHome
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+      - name: init-solr-logs
+        image: busybox
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR && chown 8983:8983 $SOLR_LOGS_DIR ; else true; fi"
+        env:
+          - name: SOLR_LOGS_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: solr-cluster-config
+                key: solrLogsDir
+        volumeMounts:
+        - name: volsolr
+          mountPath: /store
+      - name: init-solr-xml
         image: solr:8.1.1
         command: 
         - "/bin/sh"
         - "-c"
-        - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR ; else true; fi && \
-           if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME/lib ; else true; fi && \
-           if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml;\
+        - "if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml;\
                sed -i \"s/<solr>/<solr><str name='sharedLib'>\\/store\\/data\\/lib<\\/str>/g\" $SOLR_HOME/solr.xml ; else true; fi "
         env:
           - name: SOLR_HOME
@@ -62,11 +90,6 @@ spec:
               configMapKeyRef:
                 name: solr-cluster-config
                 key: solrHome
-          - name: SOLR_LOGS_DIR
-            valueFrom:
-              configMapKeyRef:
-                name: solr-cluster-config
-                key: solrLogsDir
         volumeMounts:
         - name: volsolr
           mountPath: /store
@@ -78,4 +101,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 20Gi
+          storage: 32Gi

@@ -76,19 +76,37 @@ spec:
       initContainers:
       - name: init-solr-data
         image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/data && chown 8983:8983 /store/data']
+        command: ['sh', '-c', '[ ! -f $SOLR_HOME/solr.xml ] && mkdir -p $SOLR_HOME && chown 8983:8983 $SOLR_HOME']
+        env:
+          - name: SOLR_HOME
+            valueFrom:
+              configMapKeyRef:
+                name: solr-config
+                key: solrHome
         volumeMounts:
         - name: volsolr
           mountPath: /store
       - name: init-solr-logs
         image: busybox
-        command: ['sh', '-c', 'mkdir -p /store/logs && chown 8983:8983 /store/logs']
+        command: ['sh', '-c', 'mkdir -p $SOLR_LOGS_DIR && chown 8983:8983 $SOLR_LOGS_DIR']
+        env:
+          - name: SOLR_LOGS_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: solr-config
+                key: solrLogsDir
         volumeMounts:
         - name: volsolr
           mountPath: /store
       - name: init-solr-xml
         image: solr:latest
-        command: ['sh', '-c', '[ ! -f /store/data/solr.xml ] && cp /opt/solr/server/solr/solr.xml /store/data/solr.xml || true']
+        command: ['sh', '-c', '[ ! -f $SOLR_HOME/solr.xml ] && cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml || true']
+        env:
+          - name: SOLR_HOME
+            valueFrom:
+              configMapKeyRef:
+                name: solr-config
+                key: solrHome
         volumeMounts:
         - name: volsolr
           mountPath: /store

@@ -5,12 +5,9 @@ metadata:
 provisioner: kubernetes.io/azure-disk
 reclaimPolicy: Retain
 allowVolumeExpansion: true
-mountOptions:
-  - dir_mode=0777
-  - file_mode=0777
-  - uid=8983
-  - gid=8983
 parameters:
   skuName: Premium_LRS
+  kind: Managed
+  storageaccounttype: Premium_LRS
+#  fsType: xfs
 #  location: eastus
-#  storageAccount: azure_storage_account_name
