@@ -22,4 +22,4 @@ spec:
       - path: /solr
         backend:
           serviceName: solr-service
-          servicePort: 32080
+          servicePort: 8983

@@ -1,56 +1,58 @@
-apiVersion: apps/v1
+apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: solr-ss
+  name: solr
 spec:
   selector:
     matchLabels:
       app: solr-app # has to match .spec.template.metadata.labels
-  serviceName: "solr-service-hs"
-  replicas: 1 
-  updateStrategy:
-    type: RollingUpdate
-  podManagementPolicy: Parallel
+  serviceName: "solrcluster"
+  replicas: 1 # by default is 1
   template:
     metadata:
       labels:
         app: solr-app # has to match .spec.selector.matchLabels
     spec:
-      terminationGracePeriodSeconds: 60
-      volumes:
-      - name: volsolr
-        persistentVolumeClaim:
-          claimName: task-solr-pv-claim
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: "app"
-                    operator: In
-                    values:
-                    - solr-app
-              topologyKey: "kubernetes.io/hostname"
+      terminationGracePeriodSeconds: 10
+      restartPolicy: Always
       containers:
       - name: solr
-        image: solr:latest
+        image: solr:8.1.1
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          tcpSocket:
+            port: 8983
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8983
+          initialDelaySeconds: 15
+          periodSeconds: 20
         volumeMounts:
         - name: volsolr
           mountPath: /store
         ports:
-        - name: solr-port
-          containerPort: 32080
+        - name: solrport
+          containerPort: 8983
         env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
           - name: SOLR_HOME
             valueFrom:
               configMapKeyRef:
                 name: solr-config
                 key: solrHome
-          - name: SOLR_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: solr-config
-                key: solrPort
           - name: ZK_HOST
             valueFrom:
               configMapKeyRef:
@@ -61,22 +63,19 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: SOLR_HOST
-            value: "$(POD_HOST_NAME).solr-service-hs.default.svc.cluster.local"
+            value: "$(POD_HOST_NAME).solrcluster"
           - name: SOLR_LOGS_DIR
             valueFrom:
               configMapKeyRef:
                 name: solr-config
                 key: solrLogsDir
-        livenessProbe:
-          httpGet:
-            path: /solr/
-            port: 32080
-          initialDelaySeconds: 10
-          periodSeconds: 3
       initContainers:
       - name: init-solr-data
         image: busybox
-        command: ['sh', '-c', '[ ! -f $SOLR_HOME/solr.xml ] && mkdir -p $SOLR_HOME && chown 8983:8983 $SOLR_HOME']
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "if [ ! -d $SOLR_HOME/lib ] ; then mkdir -p $SOLR_HOME/lib && chown -R 8983:8983 $SOLR_HOME ; else true; fi"
         env:
           - name: SOLR_HOME
             valueFrom:
@@ -88,7 +87,10 @@ spec:
           mountPath: /store
       - name: init-solr-logs
         image: busybox
-        command: ['sh', '-c', 'mkdir -p $SOLR_LOGS_DIR && chown 8983:8983 $SOLR_LOGS_DIR']
+        command:
+        - "/bin/sh"
+        - "-c"
+        - "if [ ! -d $SOLR_LOGS_DIR ] ; then mkdir -p $SOLR_LOGS_DIR && chown 8983:8983 $SOLR_LOGS_DIR ; else true; fi"
         env:
           - name: SOLR_LOGS_DIR
             valueFrom:
@@ -99,8 +101,12 @@ spec:
         - name: volsolr
           mountPath: /store
       - name: init-solr-xml
-        image: solr:latest
-        command: ['sh', '-c', '[ ! -f $SOLR_HOME/solr.xml ] && cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml || true']
+        image: solr:8.1.1
+        command: 
+        - "/bin/sh"
+        - "-c"
+        - "if [ ! -f $SOLR_HOME/solr.xml ] ; then cp /opt/solr/server/solr/solr.xml $SOLR_HOME/solr.xml;\
+               sed -i \"s/<solr>/<solr><str name='sharedLib'>\\/store\\/data\\/lib<\\/str>/g\" $SOLR_HOME/solr.xml ; else true; fi "
         env:
           - name: SOLR_HOME
             valueFrom:
@@ -110,3 +116,12 @@ spec:
         volumeMounts:
         - name: volsolr
           mountPath: /store
+  volumeClaimTemplates:
+  - metadata:
+      name: volsolr
+    spec:
+      storageClassName: store-solrcluster
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 32Gi

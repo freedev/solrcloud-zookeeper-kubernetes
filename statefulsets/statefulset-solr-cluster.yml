@@ -14,10 +14,21 @@ spec:
         app: solr-app # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
+      restartPolicy: Always
       containers:
       - name: solr
         image: solr:8.1.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          tcpSocket:
+            port: 8983
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8983
+          initialDelaySeconds: 15
+          periodSeconds: 20
         volumeMounts:
         - name: volsolr
           mountPath: /store
@@ -25,6 +36,18 @@ spec:
         - name: solrport
           containerPort: 8983
         env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
           - name: SOLR_HOME
             valueFrom:
               configMapKeyRef:
@@ -52,7 +75,7 @@ spec:
         command:
         - "/bin/sh"
         - "-c"
-        - "if [ ! -d $SOLR_HOME ] ; then mkdir -p $SOLR_HOME && chown 8983:8983 $SOLR_HOME ; else true; fi"
+        - "if [ ! -d $SOLR_HOME/lib ] ; then mkdir -p $SOLR_HOME/lib && chown -R 8983:8983 $SOLR_HOME ; else true; fi"
         env:
           - name: SOLR_HOME
             valueFrom:

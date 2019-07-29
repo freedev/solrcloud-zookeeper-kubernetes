@@ -14,10 +14,11 @@ spec:
         app: zookeeper-app # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
+      restartPolicy: Always
       containers:
       - name: zookeeper
         image: zookeeper:3.4.14
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command: 
         - "/bin/sh"
         - "-c"
@@ -28,6 +29,16 @@ spec:
            $(echo $ZOO_SERVERS | sed \"s/$(hostname).zkensemble/0.0.0.0/g\" > /conf/zooservers.txt) && \
            export ZOO_SERVERS=\"$( cat /conf/zooservers.txt )\" && \
            /docker-entrypoint.sh zkServer.sh start-foreground"
+        readinessProbe:
+          tcpSocket:
+            port: 2181
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 2181
+          initialDelaySeconds: 15
+          periodSeconds: 20
         volumeMounts:
         - name: volzookeeper
           mountPath: /store
@@ -39,6 +50,18 @@ spec:
         - name: zkportelection
           containerPort: 3888
         env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
           - name: ZOO_LOG_DIR
             valueFrom:
               configMapKeyRef:
