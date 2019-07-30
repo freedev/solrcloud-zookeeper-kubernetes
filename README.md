@@ -42,9 +42,9 @@ If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper
 
 ### Minikube quick start
 
-Execute `minikube start` to create and configure a virtual machine that runs a single-node Kubernetes cluster. 
+Execute this to create and configure a virtual machine that runs a single-node Kubernetes cluster.
 
-    minikube start
+    minikube start --extra-config=apiserver.ServiceNodePortRange=1-50000
 
 This command also configures your kubectl installation to communicate with this cluster.
 
@@ -66,29 +66,31 @@ After that you can finally start (create) your SolrCloud cluster with 1 Solr ins
 
     ./start-minikube.sh
 
-Then run the command `kubectl get pods` to ensure that the pods were created correctly: 
+Then run the command `kubectl get pods` to ensure that the pods were created correctly:
 
     $ kubectl get pods
-    NAME             READY     STATUS    RESTARTS   AGE
-    solr-ss-0        1/1       Running   0          12m
-    zookeeper-ss-0   1/1       Running   0          12m
+    NAME     READY   STATUS    RESTARTS   AGE
+    solr-0   1/1     Running   0          2m26s
+    zk-0     1/1     Running   1          2m31s
 
-Then run the command `minikube service` to see where the services are (which port and ip address): 
+Then run the command `minikube service` to see where the services are (which port and ip address):
 
     minikube service list
 
-    |-------------|----------------------|---------------------------|
-    |  NAMESPACE  |         NAME         |            URL            |
-    |-------------|----------------------|---------------------------|
-    | default     | kubernetes           | No node port              |
-    | default     | solr-service         | http://192.168.64.5:8983  |
-    | default     | zookeeper-service    | 192.168.64.5:2181         |
-    | kube-system | kube-dns             | No node port              |
-    | kube-system | kubernetes-dashboard | http://192.168.64.5:8983  |
-    |-------------|----------------------|---------------------------|
+    |-------------|----------------------|----------------------------|
+    |  NAMESPACE  |         NAME         |            URL             |
+    |-------------|----------------------|----------------------------|
+    | default     | kubernetes           | No node port               |
+    | default     | solr-service         | http://192.168.99.101:8983 |
+    | default     | solrcluster          | No node port               |
+    | default     | zk-service           | http://192.168.99.101:2181 |
+    | default     | zkensemble           | No node port               |
+    | kube-system | kube-dns             | No node port               |
+    | kube-system | kubernetes-dashboard | No node port               |
+    |-------------|----------------------|----------------------------|
 
-As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zookeeper-service`.
-So you'll find the SorlCloud cluster at: http://192.168.64.5:8983
+As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zk-service`.
+So you'll find the SorlCloud cluster at: http://192.168.99.101:8983
 
 On the other hand you could use `kubectl` and `jq`:
 
