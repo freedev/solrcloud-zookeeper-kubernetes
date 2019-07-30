@@ -17,7 +17,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: solr
-        image: solr:8.1.1
+        image: solr:8.2.0
         imagePullPolicy: IfNotPresent
         readinessProbe:
           tcpSocket:
@@ -101,7 +101,7 @@ spec:
         - name: volsolr
           mountPath: /store
       - name: init-solr-xml
-        image: solr:8.1.1
+        image: solr:8.2.0
         command: 
         - "/bin/sh"
         - "-c"

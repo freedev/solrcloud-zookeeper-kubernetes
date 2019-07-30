@@ -17,7 +17,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: zookeeper
-        image: zookeeper:3.4.14
+        image: zookeeper:3.5.5
         imagePullPolicy: IfNotPresent
         command: 
         - "/bin/sh"
@@ -29,18 +29,20 @@ spec:
            /docker-entrypoint.sh zkServer.sh start-foreground"
         readinessProbe:
           tcpSocket:
-            port: 2181
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           tcpSocket:
-            port: 2181
+            port: 8080
           initialDelaySeconds: 15
           periodSeconds: 20
         volumeMounts:
         - name: volzookeeper
           mountPath: /store
         ports:
+        - name: zkportdmin
+          containerPort: 8080
         - name: zkport
           containerPort: 2181
         - name: zkportpeers
