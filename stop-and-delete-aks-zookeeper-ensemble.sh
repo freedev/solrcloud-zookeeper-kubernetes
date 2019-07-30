@@ -4,6 +4,7 @@ kubectl delete statefulset zk
 
 kubectl delete service zkensemble
 kubectl delete service zk-service
+kubectl delete service zk-service-admin
 
 kubectl delete pvc volzookeeper-zk-0
 kubectl delete pvc volzookeeper-zk-1
