@@ -25,3 +25,20 @@ spec:
   type: LoadBalancer
   selector:
     app: zookeeper-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zk-service-admin
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  labels:
+    app: zookeeper-app
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: zookeeper-app

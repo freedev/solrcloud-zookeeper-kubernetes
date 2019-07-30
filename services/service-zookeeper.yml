@@ -11,3 +11,19 @@ spec:
   selector:
     app: zookeeper-app
   type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zk-service-admin
+  labels:
+    app: zookeeper-app
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 8080
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: zookeeper-app
