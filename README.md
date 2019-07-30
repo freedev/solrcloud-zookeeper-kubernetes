@@ -13,20 +13,19 @@ Now are currently described following Kubernetes Deployment Models:
 
 ### Prerequisite for Minikube installation
 
- * [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop - 
- * [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version - also note that this also means 
- install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment 
+* [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop - 
+* [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version - also note that this also means 
+* install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment 
  (MacOS, Linux, Windows).
 
 ### Prerequisite for Kubernetes with Docker for Desktop
 
- * [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition. 
- *Pay attention that at time of writing only **Edge channel** has Kubernetes embedded*.
+* [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition. *Pay attention that at time of writing only **Edge channel** has Kubernetes embedded*.
 
 ### Prerequisite for Google Cloud installation
 
- * Install Google Cloud SDK - https://cloud.google.com/sdk/downloads
- * Follow the Kubernetes Engine Quickstart - https://cloud.google.com/kubernetes-engine/docs/quickstart
+* Install Google Cloud SDK - https://cloud.google.com/sdk/downloads
+* Follow the Kubernetes Engine Quickstart - https://cloud.google.com/kubernetes-engine/docs/quickstart
 
 ### Prerequisite for Azure AKS installation
 
@@ -48,20 +47,6 @@ Execute this to create and configure a virtual machine that runs a single-node K
 
 This command also configures your kubectl installation to communicate with this cluster.
 
-Once minikube is started you need to prepare the environment to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a place (PersistentVolume) where store their data. 
-Running `prepare-minikube.sh`:
-
-    ./prepare-minikube.sh
-
-This will create inside the minikube virtual machine the directories:
-
-    /data/zookeeper/datalog
-    /data/zookeeper/data
-    /data/zookeeper/logs
-    /data/solr/data
-    /data/solr/logs
-
-Zookeeper and Solr will permanently read and write their data there.
 After that you can finally start (create) your SolrCloud cluster with 1 Solr instance and 1 Zookeeper instance:
 
     ./start-minikube.sh
@@ -102,9 +87,9 @@ Then run the command `kubectl get pods` and `kubectl get service` to ensure that
 correctly: 
 
     $ kubectl get pods
-    NAME             READY     STATUS    RESTARTS   AGE
-    solr-ss-0        1/1       Running   0          12m
-    zookeeper-ss-0   1/1       Running   0          12m
+    NAME     READY   STATUS    RESTARTS   AGE
+    solr-0   1/1     Running   0          2m26s
+    zk-0     1/1     Running   1          2m31s
 
     $ kubectl get service
     NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
