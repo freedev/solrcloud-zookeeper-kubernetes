@@ -92,12 +92,7 @@ Then run the command `minikube service` to see where the services are (which por
 As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zk-service`.
 So you'll find the SorlCloud cluster at: http://192.168.99.101:8983
 
-On the other hand you could use `kubectl` and `jq`:
-
-    $ kubectl get svc solr-service -o json | jq ".spec.ports[0] | .nodePort"
-    8983
-    $ kubectl get nodes -o json | jq '.items[0] | .status.addresses[] | select(.type | contains("ExternalIP")) | .address'
-    192.168.64.5
+Note: The ip address 192.168.99.101 allocated with minikube will change from environment to environment.
 
 ### Kubernetes with Docker for Desktop quick start
 
