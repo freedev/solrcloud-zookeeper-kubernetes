@@ -69,6 +69,11 @@ spec:
               configMapKeyRef:
                 name: solr-config
                 key: solrLogsDir
+          - name: SOLR_JAVA_MEM
+            valueFrom:
+              configMapKeyRef:
+                name: solr-config
+                key: solrJavaMem
       initContainers:
       - name: init-solr-data
         image: busybox
