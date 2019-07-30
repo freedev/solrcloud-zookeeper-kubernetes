@@ -3,7 +3,7 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: store-zkensemble
 provisioner: kubernetes.io/azure-disk
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 allowVolumeExpansion: true
 parameters:
   skuName: Premium_LRS

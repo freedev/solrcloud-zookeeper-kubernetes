@@ -3,7 +3,7 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: store-solrcluster
 provisioner: kubernetes.io/azure-disk
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 allowVolumeExpansion: true
 parameters:
   skuName: Premium_LRS
