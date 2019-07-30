@@ -1,18 +1,34 @@
 #!/bin/bash
 
+kubectl delete statefulset solr
+kubectl delete statefulset zk
 
-kubectl delete statefulset solr-ss
-kubectl delete statefulset zookeeper-ss
 kubectl delete svc solr-service
-kubectl delete svc zookeeper-service
 kubectl delete svc solrcluster
-kubectl delete svc solr-service
-kubectl delete svc zkensemble
 kubectl delete svc zk-service
+kubectl delete svc zkensemble
 
 kubectl delete configmap solr-config 
 kubectl delete configmap zookeeper-config 
 
-kubectl delete pvc task-zookeeper-pv-claim
+kubectl delete pvc volsolr-solr-0
+kubectl delete pvc volzookeeper-zk-0
 
-kubectl delete pv zookeeper-volume
+PV=$(kubectl get pv | grep "default/volsolr-solr-" | awk '{ print $1}')
+if [ "$PV" == "" ]
+then
+   echo "persistent volume not found"
+else
+   kubectl delete pv $PV
+fi
+
+PV=$(kubectl get pv | grep "default/volzookeeper-zk-" | awk '{ print $1}')
+if [ "$PV" == "" ]
+then
+   echo "persistent volume not found"
+else
+   kubectl delete pv $PV
+fi
+
+kubectl delete storageclass store-zkensemble
+kubectl delete sc store-solrcluster

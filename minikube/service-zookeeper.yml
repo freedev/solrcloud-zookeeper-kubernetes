@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zkensemble
+  labels:
+    app: zookeeper-app
+spec:
+  clusterIP: None
+  selector:
+    app: zookeeper-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zk-service
+  labels:
+    app: zookeeper-app
+spec:
+  ports:
+  - port: 32181
+    targetPort: 2181
+    nodePort: 32181
+    protocol: TCP
+  selector:
+    app: zookeeper-app
+  type: NodePort

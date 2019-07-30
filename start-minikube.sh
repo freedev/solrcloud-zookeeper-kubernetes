@@ -5,32 +5,26 @@ kubectl create configmap zookeeper-config --from-env-file=configmap/zookeeper-co
 
 kubectl get configmap
 
-kubectl create -f minikube/pv-zookeeper.yml
-kubectl create -f minikube/pv-solr.yml
+kubectl apply -f minikube/storageclass-solrcluster.yml
+kubectl apply -f minikube/storageclass-zkensemble.yml
 
-kubectl create -f minikube/pvc-zookeeper.yml
-kubectl create -f minikube/pvc-solr.yml
+kubectl apply -f statefulsets/statefulset-zookeeper.yml
 
-kubectl get pv
-kubectl get pvc
+sleep 5
 
-kubectl create -f statefulsets/statefulset-zookeeper.yml
+kubectl apply -f minikube/service-zookeeper.yml
 
-sleep 30
+kubectl apply -f statefulsets/statefulset-solr.yml
 
-kubectl create -f services/service-zookeeper.yml
+sleep 5
 
-kubectl create -f statefulsets/statefulset-solr.yml
-
-sleep 30
-
-kubectl create -f services/service-solr.yml
+kubectl apply -f minikube/service-solr.yml
 
 kubectl get pod
 kubectl get deployment
 kubectl get service
 
-echo "created solr and zookeeper deployments"
+echo "created solr and zookeeper statefulsets"
 echo "created solr and zookeeper services"
 echo ""
 
