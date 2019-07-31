@@ -69,6 +69,11 @@ spec:
               configMapKeyRef:
                 name: solr-config
                 key: solrLogsDir
+          - name: SOLR_HEAP
+            valueFrom:
+              configMapKeyRef:
+                name: solr-config
+                key: solrHeap
       initContainers:
       - name: init-solr-data
         image: busybox
