@@ -1,23 +1,19 @@
 SolrCloud Zookeeper Kubernetes
 ==============================
 
-This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a 
-Kubernetes environment.
+This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
 
-Now are currently described following Kubernetes Deployment Models:
+Here are described following Kubernetes Deployment Envs:
 
-* Minikube
-* Kubernetes with Docker for Desktop
+* Kubernetes with Docker for Desktop (local)
 * Azure Kubernetes Services (AKS)
 * Amazon Elastic Kubernetes Service (EKS)
 * Google Container Engine (GKE) (this part of the project should be updated)
+* Minikube (local)
 
-### Prerequisite for Minikube installation
+At end of installation Solr (port 8983) and Zookeeper (port 2181) are reachable via kubernetes services that acts as TCP [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/#loadbalancer).
 
-* [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop - 
-* [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version - also note that this also means 
-* install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment 
- (MacOS, Linux, Windows).
+Note: Use CloudSolrClient in your Java client application only inside the Kubernetes Cluster, from outside better if you use HttpSolrClient via the loadbalancer.
 
 ### Prerequisite for Kubernetes with Docker for Desktop
 
@@ -33,52 +29,19 @@ Now are currently described following Kubernetes Deployment Models:
 * Install [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 * Then run: `az aks install-cli`
 
+### Prerequisite for Minikube installation
+
+* [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop 
+* [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version - also note that this also means 
+* install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment 
+ (MacOS, Linux, Windows).
+
 ### Quick start
 
 If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper container, start with:
 
     git clone https://github.com/freedev/solrcloud-zookeeper-kubernetes.git
     cd solrcloud-zookeeper-kubernetes
-
-### Minikube quick start
-
-Execute this to create and configure a virtual machine that runs a single-node Kubernetes cluster.
-
-    minikube start --extra-config=apiserver.ServiceNodePortRange=1-50000
-
-This command also configures your kubectl installation to communicate with this cluster.
-
-After that you can finally start (create) your SolrCloud cluster with 1 Solr instance and 1 Zookeeper instance:
-
-    ./start-minikube.sh
-
-Then run the command `kubectl get pods` to ensure that the pods were created correctly:
-
-    $ kubectl get pods
-    NAME     READY   STATUS    RESTARTS   AGE
-    solr-0   1/1     Running   0          2m26s
-    zk-0     1/1     Running   1          2m31s
-
-Then run the command `minikube service` to see where the services are (which port and ip address):
-
-    minikube service list
-
-    |-------------|----------------------|----------------------------|
-    |  NAMESPACE  |         NAME         |            URL             |
-    |-------------|----------------------|----------------------------|
-    | default     | kubernetes           | No node port               |
-    | default     | solr-service         | http://192.168.99.101:8983 |
-    | default     | solrcluster          | No node port               |
-    | default     | zk-service           | http://192.168.99.101:2181 |
-    | default     | zkensemble           | No node port               |
-    | kube-system | kube-dns             | No node port               |
-    | kube-system | kubernetes-dashboard | No node port               |
-    |-------------|----------------------|----------------------------|
-
-As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zk-service`.
-So you'll find the SorlCloud cluster at: http://192.168.99.101:8983
-
-Note: The ip address 192.168.99.101 allocated with minikube will change from environment to environment.
 
 ### Kubernetes with Docker for Desktop quick start
 
@@ -130,17 +93,11 @@ Then create the Kubernetes cluster `cluster-solr`, note that in this tutorial I'
 
     gcloud container clusters create cluster-solr --num-nodes 1 --machine-type n1-standard-4 --disk-size=50 --scopes storage-rw,compute-rw
 
-Once your Google Cloud Kubernetes cluster is started you need to prepare the environment to deploy Solr and Zookeeper. Because both Solr and Zookeeper need a place (PersistentVolume) where store their data, so we create two 50GB disks:
-
-    gcloud compute disks create --size 50 --type pd-standard  pd-disk-zookeeper
-    
-    gcloud compute disks create --size 50 --type pd-standard  pd-disk-solr
-
 Now you can start your cluster:
 
     start-google-cloud.sh
 
-When your cluster is successfully started, you need to understand how to reach the Solr instance. 
+When your cluster is successfully started, you need to understand how to reach the Solr instance.
 You can use `kubectl` and `jq`:
 
     $ kubectl get svc solr-service -o json | jq ".spec.ports[0] | .nodePort"
@@ -153,6 +110,49 @@ If your node is still not reachable, probably it's because of Google cloud defau
     gcloud compute firewall-rules create allow-8983-from-everywhere --allow=TCP:8983 --direction=INGRESS
     gcloud compute firewall-rules create allow-2181-from-everywhere --allow=TCP:2181 --direction=INGRESS
     gcloud compute instances add-tags $(kubectl get node -o json | jq -r '.items[0] | .metadata.name ') --tags=allow-8983-from-everywhere,allow-2181-from-everywhere
+
+### Minikube quick start
+
+Execute this to create and configure a virtual machine that runs a single-node Kubernetes cluster.
+
+    minikube start --extra-config=apiserver.ServiceNodePortRange=1-50000
+
+Note: Minikube normally does not handle [LoadBalancer Services](https://kubernetes.io/docs/concepts/services-networking/#loadbalancer). I've choose LoadBalancer services to expose externally solr and zookeeper.
+ only for Minikube you need to use [NodePort Service Type](https://kubernetes.io/docs/concepts/services-networking/#nodeport)
+
+This command also configures your kubectl installation to communicate with this cluster.
+
+After that you can finally start (create) your SolrCloud cluster with 1 Solr instance and 1 Zookeeper instance:
+
+    ./start-minikube.sh
+
+Then run the command `kubectl get pods` to ensure that the pods were created correctly:
+
+    $ kubectl get pods
+    NAME     READY   STATUS    RESTARTS   AGE
+    solr-0   1/1     Running   0          2m26s
+    zk-0     1/1     Running   1          2m31s
+
+Then run the command `minikube service` to see where the services are (which port and ip address):
+
+    minikube service list
+
+    |-------------|----------------------|----------------------------|
+    |  NAMESPACE  |         NAME         |            URL             |
+    |-------------|----------------------|----------------------------|
+    | default     | kubernetes           | No node port               |
+    | default     | solr-service         | http://192.168.99.101:8983 |
+    | default     | solrcluster          | No node port               |
+    | default     | zk-service           | http://192.168.99.101:2181 |
+    | default     | zkensemble           | No node port               |
+    | kube-system | kube-dns             | No node port               |
+    | kube-system | kubernetes-dashboard | No node port               |
+    |-------------|----------------------|----------------------------|
+
+As you can imagine, this is an example of the returned output, there is the ip address and the port for `solr-service` and `zk-service`.
+So you'll find the SorlCloud cluster at: http://192.168.99.101:8983
+
+Note: The ip address 192.168.99.101 allocated with minikube will change from environment to environment.
 
 ### Shutdown
 
