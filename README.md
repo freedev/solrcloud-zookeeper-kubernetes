@@ -7,9 +7,10 @@ Kubernetes environment.
 Now are currently described following Kubernetes Deployment Models:
 
 * Minikube
-* Kubernetes with Docker for Desktop (edge version)
-* Google Container Engine (GKE)
+* Kubernetes with Docker for Desktop
 * Azure Kubernetes Services (AKS)
+* Amazon Elastic Kubernetes Service (EKS)
+* Google Container Engine (GKE) (this part of the project should be updated)
 
 ### Prerequisite for Minikube installation
 
@@ -20,7 +21,7 @@ Now are currently described following Kubernetes Deployment Models:
 
 ### Prerequisite for Kubernetes with Docker for Desktop
 
-* [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition. *Pay attention that at time of writing only **Edge channel** has Kubernetes embedded*.
+* [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition.
 
 ### Prerequisite for Google Cloud installation
 
@@ -144,6 +145,14 @@ If your node is still not reachable, probably it's because of Google cloud defau
 Now you can start your cluster:
 
     start-aks.sh
+
+## Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
+
+* You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) 
+
+Now you can start your cluster:
+
+    start-aws.sh
 
 ### Shutdown
 
