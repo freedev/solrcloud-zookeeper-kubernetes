@@ -38,31 +38,30 @@ Note: Use CloudSolrClient in your Java client application only inside the Kubern
 
 * [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition.
 
-### Prerequisite for Google Cloud installation
+## Prerequisite for Google Cloud installation
 
 * Install Google Cloud SDK - https://cloud.google.com/sdk/downloads
 * Follow the Kubernetes Engine Quickstart - https://cloud.google.com/kubernetes-engine/docs/quickstart
 
-### Prerequisite for Azure AKS installation
+## Prerequisite for Azure AKS installation
 
 * Install [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 * Then run: `az aks install-cli`
 
-### Prerequisite for Minikube installation
+## Prerequisite for Minikube installation
 
-* [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop 
-* [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version - also note that this also means 
-* install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment 
- (MacOS, Linux, Windows).
+* [install Docker lastest](https://docs.docker.com/engine/installation/) version or Docker for Desktop
+* [install Minikube latest](https://github.com/kubernetes/minikube#minikube) version  
+* install a [VM driver](https://github.com/kubernetes/minikube#quickstart) compatible with your environment (MacOS, Linux, Windows).
 
-### Quick start
+## Quick start
 
 If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper container, start with:
 
     git clone https://github.com/freedev/solrcloud-zookeeper-kubernetes.git
     cd solrcloud-zookeeper-kubernetes
 
-### Kubernetes with Docker for Desktop quick start
+## Kubernetes with Docker for Desktop quick start
 
     ./start.sh
 
@@ -84,7 +83,7 @@ correctly:
 
 So you'll find the SorlCloud cluster at: http://localhost:8983/solr/#/
 
-### Azure AKS quickstart
+## Azure AKS quickstart
 
 * You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/)
 
@@ -92,7 +91,11 @@ Now you can start your cluster:
 
     start.sh
 
-### Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
+To find the services load balancer just run:
+
+    kubectl get services
+
+## Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
 
 * You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) 
 
@@ -100,7 +103,11 @@ Now you can start your cluster:
 
     start.sh
 
-### Google Cloud quick start
+To find the services load balancer just run:
+
+    kubectl get services
+
+## Google Cloud quick start
 
 First set default compute/region and compute/zone where create your Kubernetes cluster, for example:
 
@@ -132,7 +139,7 @@ If your node is still not reachable, probably it's because of Google cloud defau
     gcloud compute firewall-rules create allow-2181-from-everywhere --allow=TCP:2181 --direction=INGRESS
     gcloud compute instances add-tags $(kubectl get node -o json | jq -r '.items[0] | .metadata.name ') --tags=allow-8983-from-everywhere,allow-2181-from-everywhere
 
-### Minikube quick start
+## Minikube quick start
 
 Execute this to create and configure a virtual machine that runs a single-node Kubernetes cluster.
 
@@ -175,16 +182,16 @@ So you'll find the SorlCloud cluster at: http://192.168.99.101:8983
 
 Note: The ip address 192.168.99.101 allocated with minikube will change from environment to environment.
 
-### Shutdown
+## Shutdown
 
 If you want shutdown Solr and Zookeeper just run:
 
-    ./stop.sh
+    ./stop.sh 
+
 
 ### Introduction to Stateful application in Kubernetes
 
-Before to deploy Solr or Zookeeper in Kubernetes, it is important understand what's the difference between Stateless 
-and Stateful applications in Kubernetes.
+Before to deploy Solr or Zookeeper in Kubernetes, it is important understand what's the difference between Stateless and Stateful applications in Kubernetes.
 
 > Stateless applications
 >
@@ -206,5 +213,5 @@ So a Solrcloud Cluster matches exactly the kind of Stateful application previous
 And we have to create the environment following these steps:
 
 1. create configmap where store the cluster configuration
-2. create persistent volumes where Solr indexes and Zookeeper logs can be written
-3. map solr and zookeeper as network services 
+2. create statefulsets for Solr and Zookeeper that can write their data on persistent volumes
+3. map solr and zookeeper as network services (loadbalancer or nodeport)
