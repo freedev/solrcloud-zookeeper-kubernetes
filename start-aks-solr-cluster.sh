@@ -8,7 +8,7 @@ kubectl apply -f aks/storageclass-solrcluster.yml
 
 kubectl get storageclass
 
-kubectl apply -f services/service-solr-cluster.yml
+kubectl apply -f aks/service-solr-cluster.yml
 
 kubectl get service
 

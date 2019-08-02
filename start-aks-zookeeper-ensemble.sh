@@ -8,7 +8,7 @@ kubectl apply -f aks/storageclass-zkensemble.yml
 
 kubectl get storageclass
 
-kubectl apply -f services/service-zookeeper-ensemble.yml
+kubectl apply -f aks/service-zookeeper-ensemble.yml
 
 kubectl get service
 
