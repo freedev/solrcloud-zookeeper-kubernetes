@@ -93,11 +93,13 @@ Now you can start your cluster:
 
 To find the services load balancer just run:
 
-    kubectl get services
+    $ kubectl get services
 
 ## Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
 
-* You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) 
+* You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
+
+    $ eksctl create cluster --name solr  --version 1.12 --nodegroup-name standard-workers --node-type t3.medium --nodes 4  --node-ami auto --nodes-min 1 --nodes-max 4
 
 Now you can start your cluster:
 
@@ -105,7 +107,13 @@ Now you can start your cluster:
 
 To find the services load balancer just run:
 
-    kubectl get services
+    $ kubectl get services
+    NAME           TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)          AGE
+    kubernetes     ClusterIP      10.100.0.1       <none>                                                                   443/TCP          13m
+    solr-service   LoadBalancer   10.100.115.145   a50c0fe32b57211e9a3fc0ae1e2f29a2-134001589.eu-west-1.elb.amazonaws.com   8983:30107/TCP   107s
+    solrcluster    ClusterIP      None             <none>                                                                   <none>           107s
+    zk-service     LoadBalancer   10.100.134.160   a502a5087b57211e9a3fc0ae1e2f29a2-301817188.eu-west-1.elb.amazonaws.com   2181:32609/TCP   108s
+    zkensemble     ClusterIP      None             <none>                                                                   <none>           108s
 
 ## Google Cloud quick start
 
