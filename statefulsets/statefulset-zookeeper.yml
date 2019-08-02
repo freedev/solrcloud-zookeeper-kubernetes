@@ -79,7 +79,6 @@ spec:
   - metadata:
       name: volzookeeper
     spec:
-      storageClassName: store-zkensemble
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:

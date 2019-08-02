@@ -125,7 +125,6 @@ spec:
   - metadata:
       name: volsolr
     spec:
-      storageClassName: store-solrcluster
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
