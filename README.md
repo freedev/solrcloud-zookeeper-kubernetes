@@ -100,6 +100,22 @@ correctly:
 
 So you'll find the SorlCloud cluster at: http://localhost:8983/solr/#/
 
+### Azure AKS quickstart
+
+* You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/) 
+
+Now you can start your cluster:
+
+    start-aks.sh
+
+### Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
+
+* You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) 
+
+Now you can start your cluster:
+
+    start-aws.sh
+
 ### Google Cloud quick start
 
 First set default compute/region and compute/zone where create your Kubernetes cluster, for example:
@@ -137,22 +153,6 @@ If your node is still not reachable, probably it's because of Google cloud defau
     gcloud compute firewall-rules create allow-8983-from-everywhere --allow=TCP:8983 --direction=INGRESS
     gcloud compute firewall-rules create allow-2181-from-everywhere --allow=TCP:2181 --direction=INGRESS
     gcloud compute instances add-tags $(kubectl get node -o json | jq -r '.items[0] | .metadata.name ') --tags=allow-8983-from-everywhere,allow-2181-from-everywhere
-
-## Azure AKS quickstart
-
-* You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/) 
-
-Now you can start your cluster:
-
-    start-aks.sh
-
-## Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
-
-* You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) 
-
-Now you can start your cluster:
-
-    start-aws.sh
 
 ### Shutdown
 
