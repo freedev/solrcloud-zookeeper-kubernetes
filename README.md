@@ -1,7 +1,26 @@
 SolrCloud Zookeeper Kubernetes
 ==============================
 
+# Introduction
+
 This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Kubernetes environment.
+
+Here you'll find basically two different configuration:
+
+* one (or more) Solr instance and one Zookeeper configured as Standalone node
+* one (or more) Solr instance and a Zookeeper Ensemble (which means a cluster)
+
+The Zookeeper configuration (and interaction with Solr) is the hardest part of the project.
+It is important to point out that Zookeeper has two different configuration: Standalone and Ensemble.
+
+* Standalone has only one node
+* Ensemble is a cluster and has always an odd number of nodes starting from 3 (i.e. 3, 5, 7, etc.).  
+
+Here we need two different configuration (StatefulSet) for Zookeeper, depending if you want have Standalone or Ensemble. Of course if you need to deploy an high availablity configuration, there are no ways, you can't have a single point of failure so you need to start an Ensemble.
+
+Solr on the other hand can run one or more instances transparentely from the zookeeper configuration, it just need to have one or more Zookeeper correctly configured and running a version compatible with the Sor version you choose.
+
+# Kubernetes Deployment Envs
 
 Here are described following Kubernetes Deployment Envs:
 
@@ -15,7 +34,7 @@ At end of installation Solr (port 8983) and Zookeeper (port 2181) are reachable 
 
 Note: Use CloudSolrClient in your Java client application only inside the Kubernetes Cluster, from outside better if you use HttpSolrClient via the loadbalancer.
 
-### Prerequisite for Kubernetes with Docker for Desktop
+## Prerequisite for Kubernetes with Docker for Desktop
 
 * [install Docker for Desktop lastest](https://www.docker.com/community-edition) version aka Community edition.
 
@@ -45,10 +64,10 @@ If you want try a light configuration with 1 SolrCloud container and 1 Zookeeper
 
 ### Kubernetes with Docker for Desktop quick start
 
-    ./start-docker-for-desktop.sh
+    ./start.sh
 
 Then run the command `kubectl get pods` and `kubectl get service` to ensure that pods and services were created 
-correctly: 
+correctly:
 
     $ kubectl get pods
     NAME     READY   STATUS    RESTARTS   AGE
@@ -56,20 +75,22 @@ correctly:
     zk-0     1/1     Running   1          2m31s
 
     $ kubectl get service
-    NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
-    kubernetes          ClusterIP   10.96.0.1       <none>        443/TCP           12d
-    solr-service        NodePort    10.98.55.176    <none>        8983:8983/TCP     32m
-    zookeeper-service   NodePort    10.104.43.251   <none>        2181:2181/TCP     32m
+    NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+    kubernetes     ClusterIP      10.96.0.1        <none>        443/TCP          4d
+    solr-service   LoadBalancer   10.100.213.138   localhost     8983:30955/TCP   1s
+    solrcluster    ClusterIP      None             <none>        <none>           1s
+    zk-service     LoadBalancer   10.109.138.223   localhost     2181:30063/TCP   1s
+    zkensemble     ClusterIP      None             <none>        <none>           1s
 
 So you'll find the SorlCloud cluster at: http://localhost:8983/solr/#/
 
 ### Azure AKS quickstart
 
-* You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/) 
+* You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/)
 
 Now you can start your cluster:
 
-    start-aks.sh
+    start.sh
 
 ### Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
 
@@ -77,7 +98,7 @@ Now you can start your cluster:
 
 Now you can start your cluster:
 
-    start-aws.sh
+    start.sh
 
 ### Google Cloud quick start
 
@@ -95,7 +116,7 @@ Then create the Kubernetes cluster `cluster-solr`, note that in this tutorial I'
 
 Now you can start your cluster:
 
-    start-google-cloud.sh
+    start.sh
 
 When your cluster is successfully started, you need to understand how to reach the Solr instance.
 You can use `kubectl` and `jq`:
