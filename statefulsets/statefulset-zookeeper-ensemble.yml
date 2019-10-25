@@ -77,16 +77,26 @@ spec:
               configMapKeyRef:
                 name: zookeeper-ensemble-config
                 key: zooDataLogDir
-          - name: ZOO_STANDALONE_ENABLED
-            valueFrom:
-              configMapKeyRef:
-                name: zookeeper-ensemble-config
-                key: zooStandaloneEnabled
           - name: ZOO_SERVERS
             valueFrom:
               configMapKeyRef:
                 name: zookeeper-ensemble-config
                 key: zooServers
+          - name: ZOO_LOG4J_PROP
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooLog4jProp
+          - name: ZOO_STANDALONE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooStandaloneEnabled
+          - name: ZOO_ADMINSERVER_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-ensemble-config
+                key: zooAdminServerEnabled
   volumeClaimTemplates:
   - metadata:
       name: volzookeeper
