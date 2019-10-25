@@ -9,10 +9,18 @@ kubectl delete svc zk-service
 kubectl delete svc zkensemble
 
 kubectl delete configmap solr-config 
+kubectl delete configmap solr-cluster-config
 kubectl delete configmap zookeeper-config 
+kubectl delete configmap zookeeper-ensemble-config
 
-kubectl delete pvc volsolr-solr-0
-kubectl delete pvc volzookeeper-zk-0
+
+PVC=$(kubectl get pvc | grep -E "volzookeeper-zk-\d+|volsolr-solr-\d+" | awk '{ print $1}')
+if [ "$PVC" == "" ]
+then
+   echo "persistent volume claim not found"
+else
+   kubectl delete pvc $PVC
+fi
 
 PV=$(kubectl get pv | grep "default/volsolr-solr-" | awk '{ print $1}')
 if [ "$PV" == "" ]
@@ -30,5 +38,3 @@ else
    kubectl delete pv $PV
 fi
 
-kubectl delete storageclass store-zkensemble
-kubectl delete sc store-solrcluster
