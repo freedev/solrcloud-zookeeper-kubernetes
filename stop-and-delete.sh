@@ -38,3 +38,6 @@ else
    kubectl delete pv $PV
 fi
 
+kubectl delete storageclass store-solrcluster
+kubectl delete storageclass store-zkensemble
+

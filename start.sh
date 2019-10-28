@@ -6,6 +6,8 @@ kubectl create configmap zookeeper-config --from-env-file=configmap/zookeeper-co
 kubectl create -f statefulsets/statefulset-zookeeper.yml
 kubectl create -f services/service-zookeeper-ensemble.yml
 
+sleep 30
+
 kubectl create -f statefulsets/statefulset-solr.yml
 kubectl create -f services/service-solr-cluster.yml
 

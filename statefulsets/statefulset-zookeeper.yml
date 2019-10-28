@@ -75,6 +75,11 @@ spec:
               configMapKeyRef:
                 name: zookeeper-config
                 key: zooDataLogDir
+          - name: ZOO_LOG4J_PROP
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-config
+                key: zooLog4jProp
   volumeClaimTemplates:
   - metadata:
       name: volzookeeper
