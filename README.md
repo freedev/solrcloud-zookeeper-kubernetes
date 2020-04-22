@@ -196,6 +196,9 @@ If you want shutdown Solr and Zookeeper just run:
 
     ./stop.sh 
 
+## Looking at the logs
+
+    kubectl exec -t -i zk-0 -- tail -100f /store/logs/zookeeper.log
 
 ### Introduction to Stateful application in Kubernetes
 
