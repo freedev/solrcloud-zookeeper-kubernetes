@@ -95,11 +95,13 @@ To find the services load balancer just run:
 
     $ kubectl get services
 
-## Amazon Elastic Kubernetes Service (Amazon EKS) quickstart
+## Amazon Elastic Kubernetes Service (Amazon AWS EKS) quickstart
 
 * You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
 
-    $ eksctl create cluster --name solr  --version 1.12 --nodegroup-name standard-workers --node-type t3.medium --nodes 4  --node-ami auto --nodes-min 1 --nodes-max 4
+```
+$ eksctl create cluster --name solr-dev --nodegroup-name standard-workers --node-type t3a.medium --nodes 4  --node-ami auto --nodes-min 1 --nodes-max 4
+```
 
 Now you can start your cluster:
 
