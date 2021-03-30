@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: solr
@@ -17,8 +17,13 @@ spec:
       restartPolicy: Always
       containers:
       - name: solr
-        image: solr:8.3.0
+        image: solr:8.8.1
         imagePullPolicy: IfNotPresent
+#        resources:
+#          requests:
+#            cpu: 1000m
+#          limits:
+#            cpu: 1000m
         readinessProbe:
           tcpSocket:
             port: 8983
