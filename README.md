@@ -87,6 +87,10 @@ So you'll find the SorlCloud cluster at: http://localhost:8983/solr/#/
 
 * You need a Kubernetes Cluster - [Azure Kubernetes Service (AKS) quickstart](https://docs.microsoft.com/en-us/azure/aks/)
 
+If you already have an existing eks cluster and only need to get the credentials:
+
+    az aks get-credentials --resource-group myResourceGroup --name MyManagedCluster
+
 Now you can start your cluster:
 
     start.sh
@@ -95,7 +99,8 @@ To find the services load balancer just run:
 
     $ kubectl get services
 
-## Amazon Elastic Kubernetes Service (Amazon AWS EKS) quickstart
+## Amazon Elastic Kubernetes Service (Amazon 
+EKS) quickstart
 
 * You need a Kubernetes Cluster - [Creating an Amazon EKS Cluster](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html)
 
