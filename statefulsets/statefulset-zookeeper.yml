@@ -13,7 +13,7 @@ spec:
       labels:
         app: zookeeper-app # has to match .spec.selector.matchLabels
     spec:
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 60
       restartPolicy: Always
       containers:
       - name: zookeeper
