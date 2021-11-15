@@ -8,3 +8,4 @@ allowVolumeExpansion: true
 parameters:
   fsType: ext4
   type: gp2
+volumeBindingMode: WaitForFirstConsumer
